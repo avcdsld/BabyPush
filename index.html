@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>赤ちゃんプッシュ</title>
+<style>
+html { font-size: 62.5%; }
+body {
+  font-size: 1.4rem;
+  word-wrap: break-word;
+}
+img {
+  max-width: 100%;
+}
+input {
+  width: 95%;
+  box-sizing: border-box; /* [borde-box]で右の飛び出しを回避 */
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+#container{
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ボタン */
+.square_btn{
+display: inline-block;
+padding: 0.5em 1em;
+text-decoration: none;
+background: #668ad8;/*ボタン色*/ color: #FFF;
+border-bottom: solid 4px #627295;
+border-radius: 3px;
+user-select: none;
+}
+.square_btn:active {/*ボタンを押したとき*/ -ms-transform: translateY(4px);
+-webkit-transform: translateY(4px);
+transform: translateY(4px);/*下に動く*/ border-bottom: none;/*線を消す*/ }
+
+</style>
+<script>
+  function onSuccess(form, buttonName) {
+    var messageSpan = document.getElementById("message");
+    messageSpan.innerHTML = buttonName + "ボタンが押されました";
+  }
+</script>
+</head>
+<body>
+
+<img src="https://drive.google.com/uc?export=view&id=0BxjVrFMMrCIDZmstZWNWNWZaMlE"/>
+
+<div id="container">
+
+<h3>最近の記録</h3>
+<? var data = SpreadsheetApp
+    .openById("<Google スプレッドシートの ID>")
+    .getActiveSheet()
+    .getDataRange()
+    .getValues(); ?>
+<ul>
+  <? for (var i = data.length - 10; i > 0 && i < data.length; i++) { ?>
+    <li><?= Utilities.formatDate(data[i][0], 'Asia/Tokyo', 'M/d HH:mm') + ", " + data[i][1] + (data[i][2] == "" ? "" : " （" + data[i][2] + "）") ?></li>
+  <? } ?>
+</ul>
+
+
+<h3>記録表</h3>
+<ul>
+  <li><a href="<Google スプレッドシートの URL>" target="_brank">スプレッドシート</a></li>
+</ul>
+
+
+<h3>ボタン操作</h3>
+<div id="message" style="color: blue;"></div>
+<table>
+  <tr>
+    <td><span class="square_btn" onclick='google.script.run.withSuccessHandler(onSuccess).withUserObject("起きた").processForm("wakeup", document.form.offsetMin.value)'>起きた</span></td>
+    <td><span class="square_btn" onclick='google.script.run.withSuccessHandler(onSuccess).withUserObject("ミルク").processForm("milk", document.form.offsetMin.value)'>ミルク</span></td>
+    <td><span class="square_btn" onclick='google.script.run.withSuccessHandler(onSuccess).withUserObject("おしっこ").processForm("pee", document.form.offsetMin.value)'>おしっこ</span></td>
+    <td><span class="square_btn" onclick='google.script.run.withSuccessHandler(onSuccess).withUserObject("うんち").processForm("poo", document.form.offsetMin.value)'>うんち</span></td>
+  </tr>
+</table>
+
+<p>
+<div>
+<form name="form">
+<span style="margin-left: 1em; font : 10pt bold arial;">オプション: </span>
+<select name="offsetMin">
+  <option value="0" selected>‐</option>
+  <option>10</option>
+  <option>20</option>
+  <option>30</option>
+  <option>40</option>
+  <option>50</option>
+  <option>60</option>
+  <option>70</option>
+  <option>80</option>
+  <option>90</option>
+  <option>100</option>
+  <option>110</option>
+  <option>120</option>
+  <option>130</option>
+  <option>140</option>
+  <option>150</option>
+  <option>160</option>
+  <option>170</option>
+  <option>180</option>
+</select>
+分前
+</form>
+</div>
+
+<h3>ライブ映像（自宅ネットワーク内のみ）</h3>
+<ul>
+  <li><a href="http://192.168.0.20:8081/" target="_brank">ライブ映像</a></li>
+  <li><a href="http://192.168.0.20:8080/" target="_brank">設定画面</a></li>
+</ul>
+
+</div><br>
+
+<script src="https://sdk.push7.jp/v2/p7sdk.js"></script>
+<script>
+p7.init("<push7 の ユーザー番号>");
+</script>
+</body>
+</html>
